@@ -1,9 +1,11 @@
+
 let controllerNumber = 0
 let rabbitNames: string[] = ["Ali", "Eir", "Ina", "Una", "Per", "Alf", "Ada", "Ela", "Eli", "Mor", "Oda", "Ask", "Kai", "Ida", "Kim", "Eva"]
 let sendName = rabbitNames[controllerNumber]
 let myMusicianNumber = controllerNumber
 basic.showString(sendName, 50)
 
+let touchMode = false
 let myLedTimer = 0;
 let myLedIsOn = true
 let basicMode = false
@@ -30,6 +32,11 @@ if (input.buttonIsPressed(Button.A)) {
         3
     )
     basicMode = false
+} else if (input.buttonIsPressed(Button.AB)){
+touchMode = true;
+basicMode = true
+basic.showIcon(IconNames.Diamond)
+OrchestraMusician.microbitOrchestraHero()
 } else {
     basic.showIcon(IconNames.SmallDiamond)
     OrchestraMusician.microbitOrchestraHero()
@@ -73,15 +80,58 @@ if (input.buttonIsPressed(Button.A)) {
         radio.setGroup(83)
         radio.sendValue(sendName, 0)
         radio.setGroup(84)
-
     })
 }
+
 basic.forever(function () {
-    if (myLedIsOn) {
-        if (input.runningTime() > myLedTimer + 30) {
-            basic.clearScreen()
-            basic.showIcon(IconNames.SmallDiamond, 0)
-            myLedIsOn = false
+    if(basicMode){
+        if (myLedIsOn) {
+            if (input.runningTime() > myLedTimer + 30) {
+                basic.clearScreen()
+                if(!touchMode){
+                    basic.showIcon(IconNames.SmallDiamond, 0)
+                } else {
+                    basic.showIcon(IconNames.Diamond, 0)
+                }
+                
+                myLedIsOn = false
+            }
         }
+    }
+})
+
+OrchestraMusician.onP0Touched(500, function() {
+    if(touchMode){
+        myLedTimer = input.runningTime()
+        myLedIsOn = true
+        led.plot(0, 4)
+        led.plot(1, 4)
+        radio.setGroup(83)
+        radio.sendValue(sendName, 0)
+        radio.setGroup(84)
+    }
+})
+
+OrchestraMusician.onP1Touched(500, function () {
+    if (touchMode) {
+        myLedTimer = input.runningTime()
+        myLedIsOn = true
+        led.plot(2, 4)
+        //led.plot(1, 4)
+        radio.setGroup(83)
+        radio.sendValue(sendName, 3)
+        radio.setGroup(84)
+    }
+})
+
+OrchestraMusician.onP2Touched(500, function () {
+    if (touchMode) {
+        myLedTimer = input.runningTime()
+        myLedIsOn = true
+        led.plot(3, 4)
+        led.plot(4, 4)
+        radio.setGroup(83)
+        radio.sendValue(sendName, 2)
+        radio.setGroup(84)
     }
 })
